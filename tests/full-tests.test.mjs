@@ -1,0 +1,22 @@
+import {strict as assert} from 'node:assert';
+import {FULL_TESTS, BY_ID, SKILLS, setLengths, chooseQuestions, budget, newFullTest, closeTestModule, continueTest, recoverDraft, testSummary, validateSession} from '../.test-build/practice-bundle.mjs';
+assert.equal(FULL_TESTS.length,2);const allIds=new Set();
+for(const test of FULL_TESTS){assert.deepEqual(test.modules.map(m=>m.ids.length),[27,27,22,22]);assert.deepEqual(test.modules.map(m=>m.seconds),[1920,1920,2100,2100]);let sectionCounts={};for(const m of test.modules){for(const id of m.ids){assert(!allIds.has(id),'tests cannot share questions');allIds.add(id);assert.equal(SKILLS[BY_ID[id].skill].section==='Math',m.section==='Math');const domain=SKILLS[BY_ID[id].skill].domain;sectionCounts[domain]=(sectionCounts[domain]??0)+1;}}assert.deepEqual(sectionCounts,{'Craft and Structure':15,'Information and Ideas':14,'Standard English Conventions':14,'Expression of Ideas':11,'Algebra':15,'Advanced Math':15,'Problem-Solving and Data Analysis':7,'Geometry and Trigonometry':7});}
+assert.equal(allIds.size,196);
+for(const mode of ['Mixed','Reading','Writing','Math'])for(const n of setLengths(mode)){const ids=chooseQuestions(mode,[],undefined,[],n);assert.equal(ids.length,n);assert.equal(new Set(ids).size,n);assert(ids.every(id=>mode==='Math'?SKILLS[BY_ID[id].skill].section==='Math':mode==='Mixed'?SKILLS[BY_ID[id].skill].section!=='Math':SKILLS[BY_ID[id].skill].section===mode));}
+assert.equal(budget(27),1920);assert.equal(budget(22,'Math'),2100);
+for(const n of [0,3,28,100,NaN,8.5])assert.throws(()=>chooseQuestions('Mixed',[],undefined,[],n));assert.throws(()=>chooseQuestions('Math',[],undefined,[],27));
+let time=1000000;let d=newFullTest('sprint-test-1',time,'full-test-qa-0001');assert.equal(d.ids.length,27);assert(recoverDraft(d));
+// Submit the first module; answers never carry into the next module.
+d.answers=Object.fromEntries(d.ids.map(id=>[id,BY_ID[id].answer]));let state=closeTestModule(d,false,time+5000);d=state.draft;assert.equal(d.exam.stage,'transition');assert.equal(d.exam.completed.length,27);assert(recoverDraft(d));assert.throws(()=>closeTestModule(d,false));
+time+=6000;d=continueTest(d,time);assert.equal(d.exam.moduleIndex,1);assert.equal(d.deadline,time+1920000);assert.equal(Object.keys(d.answers).length,0);assert(recoverDraft(d));
+// An expired second module grades unanswered questions and begins the 10-minute break.
+time=d.deadline;d=closeTestModule(d,true,time).draft;assert.equal(d.exam.stage,'break');assert.equal(d.deadline,time+600000);assert.equal(d.exam.completed.length,54);assert(d.exam.completed.slice(27).every(a=>a.cause==='Time pressure'&&!a.correct));assert(recoverDraft(d));assert.throws(()=>continueTest(d,time));assert.throws(()=>closeTestModule(d,true,time+599999));
+time+=600000;d=closeTestModule(d,true,time).draft;assert.equal(d.exam.stage,'transition');assert.equal(d.exam.completed.length,54);assert(recoverDraft(d));d=continueTest(d,time+1000);assert.equal(d.deadline,time+1000+2100000);assert.equal(d.ids.length,22);
+for(let i=2;i<4;i++){d.answers=Object.fromEntries(d.ids.map(id=>[id,BY_ID[id].answer]));state=closeTestModule(d,false,time+=10000);if(i===2){d=state.draft;assert.equal(d.exam.stage,'transition');d=continueTest(d,time+1000);}}
+const session=state.session;assert.equal(state.draft,null);assert.equal(session.attempts.length,98);assert.equal(session.attempts.filter(a=>a.correct).length,71);assert.equal(session.expired,true);assert.deepEqual(testSummary(session).map(g=>[g.correct,g.total]),[[27,54],[44,44]]);
+const saved=validateSession({...session,attempts:session.attempts.map(a=>({...a,correct:false}))});assert.equal(saved.attempts.filter(a=>a.correct).length,71,'grader recomputes the test grade');assert.equal(saved.fullTestId,'sprint-test-1');
+for(const bad of [{...session,fullTestId:'fake'},{...session,attempts:session.attempts.slice(1)},{...session,timed:false},{...session,fullTestId:undefined},{...session,attempts:[...session.attempts].reverse()}])assert.throws(()=>validateSession(bad));
+assert.equal(recoverDraft({...newFullTest('sprint-test-1',time,'recovery-test-01'),ids:FULL_TESTS[1].modules[0].ids}),null);
+assert.equal(recoverDraft({...newFullTest('sprint-test-1',time,'recovery-test-02'),exam:{...newFullTest('sprint-test-1').exam,moduleIndex:9}}),null);
+console.log('PASS: two disjoint 98-question forms; module content coverage; selectable lengths; section pacing; locked transitions; expiration; 10-minute break; reload recovery; 98-answer answer-key grading; invalid full-test rejection.');
