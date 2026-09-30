@@ -77,3 +77,4 @@ References:
 - https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site
 - https://vite.dev/guide/static-deploy.html#github-pages
 - https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages
+# sat-prep
