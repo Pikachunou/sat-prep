@@ -1,3 +1,5 @@
+import { FRESH_QUESTIONS } from './bank/fresh';
+import { CHALLENGE_QUESTIONS } from './bank/challenge';
 import { EXTRA_QUESTIONS } from './bank';
 import { MATH_QUESTIONS } from './bank/math';
 export const SKILLS = {
@@ -19,7 +21,7 @@ export const SKILLS = {
   synthesis: { name: 'Rhetorical synthesis', domain: 'Expression of Ideas', section: 'Writing', tip: 'Read the student’s goal first. Select only the notes needed to accomplish that goal, without adding unsupported information.' },
 } as const;
 export type Skill = keyof typeof SKILLS;
-export type Question = { id: string; skill: Skill; passage: string; prompt: string; options: string[]; answer: number; explanations: string[]; difficulty: 'Medium' | 'Hard' };
+export type Question = { id: string; skill: Skill; passage: string; prompt: string; options: string[]; answer: number; explanations: string[]; difficulty: 'Medium' | 'Hard' | 'Challenge' };
 const q = (id:string, skill:Skill, passage:string, prompt:string, options:string[], answer:number, explanations:string[], difficulty:Question['difficulty']='Hard'): Question => ({id,skill,passage,prompt,options,answer,explanations,difficulty});
 const complete = 'Which choice completes the text with the most logical and precise word or phrase?';
 const conventions = 'Which choice completes the text so that it conforms to the conventions of Standard English?';
@@ -58,5 +60,5 @@ q('s2','synthesis','A student has taken these notes:\n• Poet Lila Chen publish
 q('s3','synthesis','A student has taken these notes:\n• Engineer Mara Soto developed a lightweight water filter in 2021.\n• The filter uses a replaceable plant-fiber membrane.\n• In laboratory tests, it removed 94% of suspended particles.\n• It was not tested for removal of dissolved chemicals.\n• The design is intended for portable use.','The student wants to describe the tested capability while acknowledging a limitation. Which choice most effectively uses relevant information?',['Soto’s portable filter uses a plant-fiber membrane that can be replaced.','Soto’s filter removed 94% of suspended particles in laboratory tests, but its ability to remove dissolved chemicals was not tested.','Soto’s filter makes all contaminated water safe to drink.','Soto developed the lightweight filter in 2021 for portable use.'],1,['This describes design features but neither the measured capability nor its testing limitation.','This combines the measured result with the explicit boundary of what was tested.','Particle removal alone does not establish drinking safety or removal of all contaminants.','This omits the capability and the limitation.']),
 q('s4','synthesis','A student has taken these notes:\n• Historian Nadi Okoro studies handwritten shipping records.\n• Some records contain faded ink.\n• Okoro photographed these records at several light wavelengths.\n• Certain wavelengths made faded lettering easier to distinguish.\n• This allowed Okoro to transcribe previously unreadable entries.','The student wants to explain how Okoro recovered information from damaged records. Which choice most effectively uses relevant information?',['Okoro is a historian whose research concerns handwritten shipping records.','Some shipping records contain faded ink and are difficult to read.','Okoro’s photographs proved that every shipping record was accurate.','By photographing records at wavelengths that clarified faded lettering, Okoro could transcribe previously unreadable entries.'],3,['This introduces the scholar but not the recovery method.','This gives the problem but not the solution.','Legibility does not establish accuracy, and every is unsupported.','This connects the imaging method, clearer lettering, and the recovery of information.']),
 ];
-QUESTIONS.push(...EXTRA_QUESTIONS,...MATH_QUESTIONS);
+QUESTIONS.push(...EXTRA_QUESTIONS,...MATH_QUESTIONS,...FRESH_QUESTIONS,...CHALLENGE_QUESTIONS);
 export const BY_ID = Object.fromEntries(QUESTIONS.map(q => [q.id,q])) as Record<string,Question>;

@@ -1,7 +1,10 @@
 {
   "edition": "GitHub Pages",
-  "created": "2026-09-30",
-  "questions": 300,
+  "updated": "2026-10-01",
+  "questions": 380,
+  "readingWritingQuestions": 248,
+  "mathQuestions": 132,
+  "stretchQuestions": 32,
   "fullTests": 2,
   "files": [
     {
@@ -16,18 +19,18 @@
     },
     {
       "path": "README.md",
-      "sha256": "de1ea73bcc89ee6223b7907998427ad88ed66b00a8a69c41d389fe051720c0d3",
-      "bytes": 3903
+      "sha256": "f1b10f7befe251c515d7b83c611585b5403401f8c35aa5e3c798836e56a8fc68",
+      "bytes": 4927
     },
     {
       "path": "VALIDATION.md",
-      "sha256": "b59fe17d88f126b492d23c38f580c35b73343a54c43d3b61cf4527d354b7338a",
-      "bytes": 1892
+      "sha256": "aa18abaacbfbc961030a9c32281da7bbf9a445f3b13ccd2e9cd068365511703f",
+      "bytes": 2320
     },
     {
       "path": "app/dashboard.tsx",
-      "sha256": "39a70072021cafeef587f8de59def6e4d214bc322fb4c5d7918f5d2cc92b2485",
-      "bytes": 30545
+      "sha256": "1a3bba504ce178637a733c94eae07005970ef24ba8991db23e2eda6f627370d1",
+      "bytes": 31910
     },
     {
       "path": "app/full-tests.tsx",
@@ -36,8 +39,13 @@
     },
     {
       "path": "app/globals.css",
-      "sha256": "57a0fd638e3044782a8b510d3d6f7a88ecc412a6ed5e6aafb27f971f716d4e8e",
-      "bytes": 25128
+      "sha256": "6f3bf6ca08e4641fbc8bf1dfad5f584c472ead58a77c922765836fdba573cd2e",
+      "bytes": 26415
+    },
+    {
+      "path": "app/mastery.tsx",
+      "sha256": "47c25c95211904cead368c9bc88e8fe5fa7c27288e9cfffa4cfb7fc416f89c65",
+      "bytes": 4079
     },
     {
       "path": "app/roadmap.tsx",
@@ -85,14 +93,14 @@
       "bytes": 0
     },
     {
-      "path": "docs/assets/index-B1AJjfDu.css",
-      "sha256": "0a30a49365672267e74ce416386ab086df541f8878a680c5a289d98de8206154",
-      "bytes": 71126
+      "path": "docs/assets/index-Bd1g3wvg.css",
+      "sha256": "1a9bda7a8484171b7c03997f8b1dc4558fa0dfd5e4c9334c49e9d414ccc7208d",
+      "bytes": 72407
     },
     {
-      "path": "docs/assets/index-BBzSI9E-.js",
-      "sha256": "e9e689b5fb407e3604ccee6ca5cfb980ed56ce7bb704ffde787f69c0cc71bf50",
-      "bytes": 596266
+      "path": "docs/assets/index-EsGoN4mI.js",
+      "sha256": "bb78805f00f9563c5cbc436b70f83b8b0fe333d8b116f3a58474e888d5a505b4",
+      "bytes": 659863
     },
     {
       "path": "docs/favicon.svg",
@@ -101,7 +109,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "a06c1edcc5faf23cd727dee441ac50fe0172ff7b1d9b3847089f34dfcd3d8e52",
+      "sha256": "a01dbd47f420e5478133f086538819652bce15af034aff759f09b09879b77b77",
       "bytes": 722
     },
     {
@@ -113,6 +121,11 @@
       "path": "lib/bank/boundaries.ts",
       "sha256": "f20d66824fc64f6a58e1eb8b8e8a4580fbc552bf352d3930abdfefdb12bacdc2",
       "bytes": 10759
+    },
+    {
+      "path": "lib/bank/challenge.ts",
+      "sha256": "6871dac3a706b6c5480fdf02bd9d68a305be080df11d0d7abb960daab671e1bb",
+      "bytes": 23525
     },
     {
       "path": "lib/bank/common.ts",
@@ -128,6 +141,11 @@
       "path": "lib/bank/form.ts",
       "sha256": "fade8272abecf0a7e79bd1a560195fa0444f5d80368ffc6e930eec90479ba842",
       "bytes": 9848
+    },
+    {
+      "path": "lib/bank/fresh.ts",
+      "sha256": "58c190c98e7bc583806f68273c4feaf4c8e0a0c372072605b1ef513ef13eeb66",
+      "bytes": 33688
     },
     {
       "path": "lib/bank/index.ts",
@@ -180,14 +198,19 @@
       "bytes": 6550
     },
     {
+      "path": "lib/mastery.ts",
+      "sha256": "a101d01212a20a5d9d734840aec7818c62af8043344684721d5ce034ae5367af",
+      "bytes": 2619
+    },
+    {
       "path": "lib/practice.ts",
-      "sha256": "9b3f5abfa115fea0f4797e19fa8a1d6a48862cd65e359c9420e3d13523ccf4ab",
-      "bytes": 4685
+      "sha256": "180e1f46e746415178d3ba6c8037a252c510481658909b2126ccd159710e6919",
+      "bytes": 5195
     },
     {
       "path": "lib/questions.ts",
-      "sha256": "27cb9240298627e009f9cfc431e11eafab7d71a99d19461eb9e1f6921af6cb1e",
-      "bytes": 29085
+      "sha256": "62866e4177b98b7dc1ab0702e8080109de5d889471ef9d2f7865b76de8432c0b",
+      "bytes": 29245
     },
     {
       "path": "lib/roadmap.ts",
@@ -235,6 +258,16 @@
       "bytes": 38
     },
     {
+      "path": "tests/challenge.test.mjs",
+      "sha256": "969c7bacfce100f48cd077349a2598a04eaba5dcba1d6b22b406ed84c3e1f132",
+      "bytes": 4787
+    },
+    {
+      "path": "tests/fresh.test.mjs",
+      "sha256": "17f81076d53a903403f642742828360e4d2f1b6dc2a4a2aa238548d40e9ebc43",
+      "bytes": 2625
+    },
+    {
       "path": "tests/full-tests.test.mjs",
       "sha256": "93e837d24453221c19a424d419cafc55d5a61bb99d176a86b158dfe247218ed3",
       "bytes": 4557
@@ -246,18 +279,18 @@
     },
     {
       "path": "tests/practice-entry.ts",
-      "sha256": "a1ca04272940013cff4030698ed7fe148233a040ca243e839f54e4db0b335da6",
-      "bytes": 136
+      "sha256": "3ae38a7db5a6e2a6c57cdbd2e4d1b7748f5868247d4c70fef0c01780ed7d4150",
+      "bytes": 169
     },
     {
       "path": "tests/practice.test.mjs",
-      "sha256": "2cfaa8d98e3dcf747ffe3d2e2d9baa05fa22d0d3cbf41aad434ad27ffe0bff87",
-      "bytes": 7399
+      "sha256": "6239577ff6155e5fc916d558e3f055ff4a36699647753aa9126fd90b1cbeb4ed",
+      "bytes": 7431
     },
     {
       "path": "tests/run.mjs",
-      "sha256": "c45e0b3b32d3f8e9f4713137034801265a61ffbe47f233df9e32da2103bd8426",
-      "bytes": 760
+      "sha256": "f11c2d727b1ddc260936058fc7af2a5c2fe09fc37623fd028e40502f3548262c",
+      "bytes": 832
     },
     {
       "path": "tests/storage.test.mjs",
@@ -266,8 +299,8 @@
     },
     {
       "path": "tests/ui.test.mjs",
-      "sha256": "6a8204cdefa7625c4af35f6a38c7db7e2689ee219f2bbc1ecfcbf610a9f7ccee",
-      "bytes": 7259
+      "sha256": "0badfd3c1a516643cbc81e4d988aad3b70cf458ffa457644f87a423035c2cc76",
+      "bytes": 9372
     },
     {
       "path": "tsconfig.json",

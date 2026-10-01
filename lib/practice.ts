@@ -14,14 +14,16 @@ export function stats(history:Session[]) {
     return { skill, total:attempts.length, correct, missed:attempts.length-correct, accuracy:attempts.length?Math.round(correct/attempts.length*100):null };
   }).sort((a,b)=>b.missed-a.missed || (a.accuracy??101)-(b.accuracy??101));
 }
-export function setLengths(mode:string){return mode==='Math'?[4,6,8,10,15,20,22]:[4,6,8,10,15,20,27];}
-export function chooseQuestions(mode:string,history:Session[],target?:Skill,excluded:string[]=[],count?:number) {
+export type PracticeLevel = 'Standard'|'Challenge';
+export function setLengths(mode:string,level:PracticeLevel='Standard'){const max=QUESTIONS.filter(q=>(q.difficulty==='Challenge')===(level==='Challenge')&&(mode==='Math'?SKILLS[q.skill].section==='Math':mode==='Mixed'?SKILLS[q.skill].section!=='Math':SKILLS[q.skill].section===mode)).length;return (mode==='Math'?[4,6,8,10,15,20,22]:[4,6,8,10,15,20,27]).filter(n=>n<=max);}
+export function chooseQuestions(mode:string,history:Session[],target?:Skill,excluded:string[]=[],count?:number,level:PracticeLevel='Standard') {
+  if(!['Standard','Challenge'].includes(level))throw Error('Invalid practice level');
   const seen=new Map<string,number>();for(const a of history.flatMap(s=>s.attempts))seen.set(a.questionId,(seen.get(a.questionId)??0)+1);
   const ordered=QUESTIONS.filter(q=>!excluded.includes(q.id)).sort((a,b)=>(seen.get(a.id)??0)-(seen.get(b.id)??0));
   if(target){const fresh=ordered.filter(q=>q.skill===target);const fallback=QUESTIONS.filter(q=>q.skill===target&&excluded.includes(q.id));return [...fresh,...fallback].slice(0,3).map(q=>q.id);}
   if(!['Mixed','Reading','Writing','Math'].includes(mode))throw Error('Invalid practice mode');
-  const n=count??(mode==='Reading'||mode==='Writing'?6:8);if(!setLengths(mode).includes(n))throw Error('Invalid question count');
-  const pool=ordered.filter(q=>mode==='Math'?SKILLS[q.skill].section==='Math':mode==='Reading'||mode==='Writing'?SKILLS[q.skill].section===mode:SKILLS[q.skill].section!=='Math');
+  const n=count??(mode==='Reading'||mode==='Writing'?6:8);if(!setLengths(mode,level).includes(n))throw Error('Invalid question count');
+  const pool=ordered.filter(q=>(q.difficulty==='Challenge')===(level==='Challenge')).filter(q=>mode==='Math'?SKILLS[q.skill].section==='Math':mode==='Reading'||mode==='Writing'?SKILLS[q.skill].section===mode:SKILLS[q.skill].section!=='Math');
   const picks:string[]=[];const skillCount:Partial<Record<Skill,number>>={};const practiced:Partial<Record<Skill,number>>={};
   for(const a of history.flatMap(s=>s.attempts)){const skill=BY_ID[a.questionId]?.skill;if(skill)practiced[skill]=(practiced[skill]??0)+1;}
   for(let i=0;i<n;i++){const remaining=pool.filter(q=>!picks.includes(q.id));remaining.sort((a,b)=>(seen.get(a.id)??0)-(seen.get(b.id)??0)||(skillCount[a.skill]??0)-(skillCount[b.skill]??0)||(practiced[a.skill]??0)-(practiced[b.skill]??0));const next=remaining[0];if(!next)throw Error('Not enough questions');picks.push(next.id);skillCount[next.skill]=(skillCount[next.skill]??0)+1;}

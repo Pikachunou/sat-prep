@@ -1,9 +1,9 @@
 import { strict as assert } from 'node:assert';
 import { QUESTIONS, BY_ID, SKILLS, budget, secondsLeft, stats, chooseQuestions, validateSession, DEFAULT_GOALS, validateGoalPatch, freshGoal, dailyPlan, pacificDate, taskCompleted } from '../.test-build/practice-bundle.mjs';
-assert.equal(QUESTIONS.length,300);
-assert.equal(new Set(QUESTIONS.map(q=>q.id)).size,300);
+assert.equal(QUESTIONS.length,380);
+assert.equal(new Set(QUESTIONS.map(q=>q.id)).size,380);
 for(const q of QUESTIONS){assert.equal(q.options.length,4);assert.equal(q.explanations.length,4);assert(q.explanations.every(e=>e.length>25));assert(q.answer>=0&&q.answer<=3);assert(SKILLS[q.skill]);}
-for(const skill of Object.keys(SKILLS)) assert.equal(QUESTIONS.filter(q=>q.skill===skill).length,SKILLS[skill].section==='Math'?({mathLinear:16,mathSystems:14,mathQuadratics:16,mathFunctions:14}[skill]??8):26);
+for(const skill of Object.keys(SKILLS)) assert.equal(QUESTIONS.filter(q=>q.skill===skill&&q.difficulty!=='Challenge').length,SKILLS[skill].section==='Math'?(({mathLinear:16,mathSystems:14,mathQuadratics:16,mathFunctions:14}[skill]??8)+3):29);
 assert.equal(budget(8),569);assert.equal(budget(6),427);
 assert.equal(secondsLeft(10000,9001),1);assert.equal(secondsLeft(10000,10001),0);
 const mixed=chooseQuestions('Mixed',[]);assert.equal(mixed.length,8);assert.equal(new Set(mixed.map(id=>BY_ID[id].skill)).size,8);
@@ -21,7 +21,7 @@ assert.throws(()=>validateSession({...session,attempts:[{...session.attempts[0],
 assert.equal(stats([]).every(s=>s.accuracy===null),true);
 // Every new question is reachable; balanced mixed sets consume the full bank before repeats.
 let simulated=[];const visited=new Set();
-for(let i=0;i<26;i++){
+for(let i=0;i<29;i++){
   const ids=chooseQuestions('Mixed',simulated);
   assert.equal(new Set(ids).size,8);
   for(const id of ids){assert(!visited.has(id),`premature repeat: ${id}`);visited.add(id);}
@@ -29,7 +29,7 @@ for(let i=0;i<26;i++){
   assert(completed.attempts.every(a=>a.correct));simulated.push(completed);
   if(i>=4)assert.equal(new Set(ids.map(id=>BY_ID[id].answer)).size,4,'new mixed sets must vary correct-answer letters');
 }
-assert.equal(visited.size,208);
+assert.equal(visited.size,232);
 const originalIds=['v','p','i','e','b','f','t','s'].flatMap(prefix=>[1,2,3,4].map(n=>`${prefix}${n}`));
 for(const id of originalIds)assert(BY_ID[id],`legacy question missing: ${id}`);
 const textSeen=new Set();
@@ -43,7 +43,7 @@ for(const skill of Object.keys(SKILLS)){
   const drill=chooseQuestions('Drill',simulated,skill);
   assert.equal(drill.length,3);assert(drill.every(id=>BY_ID[id].skill===skill));
 }
-console.log('PASS: 300-question integrity; timing and expiration; balanced sets; fresh targeted follow-ups; answer-key grading; weakness ranking; invalid inputs; 26 mixed sets without repeats; legacy IDs; no duplicate passages or choices; balanced answer letters.');
+console.log('PASS: 380-question integrity; timing and expiration; balanced sets; fresh targeted follow-ups; answer-key grading; weakness ranking; invalid inputs; 29 mixed sets without repeats; legacy IDs; no duplicate passages or choices; balanced answer letters.');
 
 assert.equal(budget(8,'Math'),764);
 let mathHistory=[];const mathVisited=new Set();

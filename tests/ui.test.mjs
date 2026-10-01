@@ -63,6 +63,17 @@ try{
   assert(element.textContent.includes('0 / 98'));assert(element.textContent.includes('Progress saved on this device'));
   const full=JSON.parse(localStorage.getItem(historyKey)).find(s=>s.fullTestId);assert.equal(full.attempts.length,98);assert(full.attempts.every(a=>!a.correct&&a.selected===null));
   await remount();assert(element.textContent.includes('3 sets'));assert.equal(networkCalls,0);
+  // New difficulty and mastery controls use the same browser-only grading and storage.
+  await click(button('Mastery & estimate'));assert(element.textContent.includes('Experimental total estimate'));assert.equal(document.querySelectorAll('.mastery-sections .skill-row').length,16);const initialEstimate=document.querySelector('.mastery-summary strong').textContent;
+  await click(button('Practice'));await click(document.querySelector('[role=radio][value="Math"]'));
+  await act(async()=>document.getElementById('question-count').dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowDown',bubbles:true})));await flush();await click([...document.querySelectorAll('[role=option]')].find(o=>o.textContent==='22 questions'));
+  await act(async()=>document.getElementById('practice-level').dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowDown',bubbles:true})));await flush();await click([...document.querySelectorAll('[role=option]')].find(o=>o.textContent.includes('Super hard')));
+  assert(document.getElementById('question-count').textContent.includes('15 questions'));
+  await click(button('Start timed set'));let draft=JSON.parse(sessionStorage.getItem(key));assert.equal(draft.ids.length,15);assert(draft.ids.every(id=>id.startsWith('challenge-math')));assert.equal(draft.deadline-draft.startedAt,1432000);
+  assert(button('Mastery & estimate').disabled);assert(element.textContent.includes('Challenge'));
+  const {BY_ID}=await import('../.test-build/practice-bundle.mjs');await click(document.querySelector(`[role=radio][value="${BY_ID[draft.ids[0]].answer}"]`));await click(button('Finish set (14 unanswered)'));
+  assert(JSON.parse(localStorage.getItem(historyKey))[0].attempts[0].correct);await click(button('Close'));await click(button('Mastery & estimate'));assert(element.textContent.includes('Super hard:'));assert.equal(document.querySelector('.mastery-summary strong').textContent,initialEstimate,'stretch results must not change the numeric estimate');
+  await remount();await click(button('Mastery & estimate'));assert(element.textContent.includes('Super hard:'));assert.equal(networkCalls,0);
   console.log('PASS: static UI selection, Math timing, navigation, reload recovery, local saving, immediate explanations, targeted drills, editable persistent goals, full-test module locks, break recovery, 98-answer grading, and zero server API requests (simulated DOM).');
 }finally{
   await act(async()=>root.unmount());await window.happyDOM.abort();
